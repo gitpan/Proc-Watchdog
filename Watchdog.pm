@@ -5,7 +5,7 @@ use Carp;
 use strict;
 use warnings;
 use IO::File;
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 sub new {
     my $type = shift;
@@ -60,6 +60,11 @@ sub alarm ($$) {
 sub reset () {
     my $self = shift;
 
+    $self->_unlink_file;
+}
+
+sub DESTROY {
+    my $self = shift;
     $self->_unlink_file;
 }
 
@@ -135,6 +140,12 @@ Original version; created by h2xs 1.20 with options
 	Proc::Watchdog
 	-v
 	1.00
+
+=item 1.01
+
+Added the C<DESTROY> method. Now, when an object gets out of scope or
+is otherwise collected, the file will be automatically C<unlink()>ed
+to prevent spurious C<kill()>s.
 
 =back
 
